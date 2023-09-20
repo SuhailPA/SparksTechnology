@@ -8,6 +8,17 @@
     android:layout_height="match_parent"
     tools:context=".ui.login_register.RegisterFragment">
 
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/userRegUserName"
+        android:layout_width="match_parent"
+        android:layout_margin="15dp"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="User Name" />
+    </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/userRegFirstname"
@@ -71,6 +82,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.button.MaterialButton
+        android:id="@+id/userRegButton"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_margin="15dp"

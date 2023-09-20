@@ -50,6 +50,7 @@
         app:layout_constraintTop_toBottomOf="@+id/second_name" />
 
     <TextView
+        android:id="@+id/registerText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
