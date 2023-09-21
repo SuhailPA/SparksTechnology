@@ -17,6 +17,7 @@ import com.example.sparktech.data.model.NetworkResponse
 import com.example.sparktech.data.model.UserData
 import com.example.sparktech.databinding.FragmentRegisterBinding
 import com.example.sparktech.ui.MainActivity
+import com.example.sparktech.utils.ApiState
 import com.example.sparktech.utils.getString
 import com.example.sparktech.utils.isNotEmpty
 import dagger.hilt.android.AndroidEntryPoint
@@ -67,7 +68,7 @@ class RegisterFragment : Fragment() {
     private fun initResponse() {
         viewModel.userData.observe(viewLifecycleOwner) { networkResponse ->
             when (networkResponse) {
-                is NetworkResponse.Success -> {
+                is ApiState.Success<*> -> {
                     Toast.makeText(
                         context,
                         "Successfully Registered",
@@ -76,17 +77,9 @@ class RegisterFragment : Fragment() {
                     navController.navigateUp()
                 }
 
-                is NetworkResponse.Error -> {
-                    if (!networkResponse.errorMessage.isNullOrEmpty()) {
-                        networkResponse.errorMessage.let {
-                            Toast.makeText(
-                                context,
-                                it,
-                                Toast.LENGTH_LONG
-                            ).show()
-                        }
-                    } else {
-                        networkResponse.errorRegResponse?.let {
+                is ApiState.Error<*> -> {
+                    if (networkResponse.error !=null) {
+                        networkResponse.error.let {
                             Toast.makeText(
                                 context,
                                 it.toString(),

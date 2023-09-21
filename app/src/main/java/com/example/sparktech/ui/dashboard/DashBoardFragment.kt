@@ -10,6 +10,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.viewModels
@@ -18,8 +19,10 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.sparktech.R
+import com.example.sparktech.data.model.DashboardData
 import com.example.sparktech.databinding.FragmentDashBoardBinding
 import com.example.sparktech.ui.MainActivity
+import com.example.sparktech.utils.ApiState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -93,7 +96,17 @@ class DashBoardFragment : Fragment() {
         }
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.dashBoardList.collect {
-                dashBoardAdapter.differ.submitList(it)
+                when (it) {
+                    is ApiState.Success<*> -> {
+                        dashBoardAdapter.differ.submitList(it.data as List<DashboardData>)
+                    }
+
+                    is ApiState.Error<*> -> {
+                        Toast.makeText(context, it.error.toString(), Toast.LENGTH_LONG).show()
+                    }
+
+                    else -> {}
+                }
             }
         }
     }

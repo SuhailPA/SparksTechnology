@@ -13,6 +13,7 @@ import com.example.sparktech.data.model.LoginResponse
 import com.example.sparktech.data.model.UserLogin
 import com.example.sparktech.databinding.FragmentLoginBinding
 import com.example.sparktech.ui.MainActivity
+import com.example.sparktech.utils.ApiState
 import com.example.sparktech.utils.getString
 import com.example.sparktech.utils.isNotEmpty
 import dagger.hilt.android.AndroidEntryPoint
@@ -53,12 +54,12 @@ class LoginFragment : Fragment() {
     private fun initLoginObserver() {
         viewModel.userLogin.observe(viewLifecycleOwner) { loginResponse ->
             when (loginResponse) {
-                is LoginResponse.Success -> {
+                is ApiState.Success<*> -> {
                     navController.navigate(directions = LoginFragmentDirections.actionLoginFragmentToDashBoardFragment())
                 }
 
-                is LoginResponse.Error -> {
-                    Toast.makeText(context, loginResponse.errorMessage, Toast.LENGTH_LONG).show()
+                is ApiState.Error<*> -> {
+                    Toast.makeText(context, loginResponse.toString(), Toast.LENGTH_LONG).show()
                 }
 
                 else -> {}

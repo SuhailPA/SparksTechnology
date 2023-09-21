@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.sparktech.data.model.DashboardData
 import com.example.sparktech.repository.DashboardRepository
+import com.example.sparktech.utils.ApiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -19,8 +20,8 @@ class DashBoardViewModel @Inject constructor(
     private val encryptedPref: SharedPreferences
 ) : ViewModel() {
 
-    private val _dashBoardList = MutableStateFlow<List<DashboardData>?>(null)
-    val dashBoardList: StateFlow<List<DashboardData>?> = _dashBoardList
+    private val _dashBoardList = MutableStateFlow<ApiState>(ApiState.Loading)
+    val dashBoardList: StateFlow<ApiState> = _dashBoardList
 
     init {
         getAllData()
@@ -28,17 +29,18 @@ class DashBoardViewModel @Inject constructor(
 
     private fun getAllData() {
         viewModelScope.launch {
-            try {
+            _dashBoardList.value = try {
                 val response = repository.getAllData()
                 if (response.isSuccessful) {
-                    _dashBoardList.value = response.body()
+                    ApiState.Success(response.body())
                 } else {
-                    response.errorBody()?.string()
+                    ApiState.Error(response.errorBody()?.string())
                 }
             } catch (e: IOException) {
+                ApiState.Error(e.message)
 
             } catch (e: HttpException) {
-
+                ApiState.Error(e.message)
             }
         }
     }
