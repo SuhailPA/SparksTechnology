@@ -1,5 +1,6 @@
 package com.example.sparktech.ui.login_register
 
+import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -8,7 +9,9 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
@@ -78,7 +81,7 @@ class RegisterFragment : Fragment() {
                 }
 
                 is ApiState.Error<*> -> {
-                    if (networkResponse.error !=null) {
+                    if (networkResponse.error != null) {
                         networkResponse.error.let {
                             Toast.makeText(
                                 context,
@@ -110,6 +113,7 @@ class RegisterFragment : Fragment() {
     private fun initUi() {
         binding?.apply {
             userRegButton.setOnClickListener {
+                hideKeyboard()
                 if (validateFields()) {
                     val user = UserData(
                         username = userRegUserName.getString(),
@@ -130,5 +134,12 @@ class RegisterFragment : Fragment() {
         _binding = null
     }
 
+    private fun hideKeyboard() {
+        activity?.currentFocus?.let { view ->
+            val imm =
+                activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+            imm?.hideSoftInputFromWindow(view.windowToken, 0)
+        }
+    }
 
 }
