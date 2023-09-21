@@ -71,7 +71,7 @@ class DashBoardFragment : Fragment() {
     }
 
     private fun alertPopUp() {
-        val alertDialog = AlertDialog.Builder(context)
+        AlertDialog.Builder(context)
             .setTitle("Exit")
             .setMessage("Are you sure to exit")
             .setPositiveButton("Yes") { dialog, _ ->
