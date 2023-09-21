@@ -6,6 +6,8 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
+import coil.size.Scale
+import coil.transform.CircleCropTransformation
 import com.example.sparktech.R
 import com.example.sparktech.data.model.DashboardData
 import com.example.sparktech.databinding.DashboardLayoutItemBinding

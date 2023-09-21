@@ -10,6 +10,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.sparktech.R
 import com.example.sparktech.databinding.FragmentDashBoardBinding
+import com.example.sparktech.ui.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -29,6 +30,10 @@ class DashBoardFragment : Fragment() {
     ): View? {
 
         binding = FragmentDashBoardBinding.inflate(inflater, container, false)
+        (activity as MainActivity).supportActionBar?.apply {
+            title = "Dashboard Screen"
+            setDisplayHomeAsUpEnabled(false)
+        }
         initUi()
         return binding.root
     }
@@ -44,7 +49,6 @@ class DashBoardFragment : Fragment() {
                 dashBoardAdapter.differ.submitList(it)
             }
         }
-
     }
 
 }
