@@ -3,25 +3,27 @@ package com.example.sparktech.ui.login_register
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
-import com.example.sparktech.R
+import androidx.navigation.NavController
+import androidx.navigation.fragment.findNavController
 import com.example.sparktech.data.model.NetworkResponse
 import com.example.sparktech.data.model.UserData
 import com.example.sparktech.databinding.FragmentRegisterBinding
 import com.google.android.material.textfield.TextInputLayout
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class RegisterFragment : Fragment() {
 
     private val viewModel: LoginRegisterViewModel by viewModels()
+    private lateinit var navController: NavController
     private var _binding: FragmentRegisterBinding? = null
     private val binding get() = _binding
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,9 +37,29 @@ class RegisterFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         _binding = FragmentRegisterBinding.inflate(inflater, container, false)
+        navController = findNavController()
+        (activity as MainActivity).supportActionBar?.apply {
+            setDisplayHomeAsUpEnabled(true)
+            title = "Register Screen"
+        }
+        backButtonHandler()
         initUi()
         initResponse()
         return binding?.root
+    }
+
+    private fun backButtonHandler() {
+        (activity as MainActivity).addMenuProvider(object :MenuProvider{
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {}
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                when (menuItem.itemId){
+                    android.R.id.home -> navController.navigateUp()
+                }
+                return true
+            }
+
+        })
     }
 
     private fun initResponse() {
@@ -119,4 +141,6 @@ class RegisterFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+
+
 }

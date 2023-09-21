@@ -6,8 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
-import com.example.sparktech.R
 import com.example.sparktech.databinding.FragmentLoginBinding
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -17,6 +17,7 @@ class LoginFragment : Fragment() {
     private val binding get() = _binding
     private val viewModel: LoginRegisterViewModel by viewModels()
 
+    private lateinit var navController : NavController
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -27,6 +28,13 @@ class LoginFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentLoginBinding.inflate(inflater, container, false)
+        navController = findNavController()
+
+        (activity as MainActivity?)?.supportActionBar?.apply {
+            title = "Login Screen"
+            setDisplayHomeAsUpEnabled(false)
+        }
+
         binding?.registerText?.setOnClickListener {
             findNavController().navigate(directions = LoginFragmentDirections.actionLoginFragmentToRegisterFragment())
         }
