@@ -16,13 +16,16 @@ import androidx.core.view.MenuProvider
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
+import com.example.sparktech.data.model.ErrorBody
 import com.example.sparktech.data.model.NetworkResponse
 import com.example.sparktech.data.model.UserData
 import com.example.sparktech.databinding.FragmentRegisterBinding
 import com.example.sparktech.ui.MainActivity
 import com.example.sparktech.utils.ApiState
+import com.example.sparktech.utils.TextInputViews
 import com.example.sparktech.utils.getString
 import com.example.sparktech.utils.isNotEmpty
+import com.google.android.material.textfield.TextInputLayout
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -31,6 +34,7 @@ class RegisterFragment : Fragment() {
     private val viewModel: LoginRegisterViewModel by viewModels()
     private lateinit var navController: NavController
     private var _binding: FragmentRegisterBinding? = null
+    private lateinit var fieldToViewMap: Map<TextInputViews, TextInputLayout?>
     private val binding get() = _binding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,6 +52,14 @@ class RegisterFragment : Fragment() {
             setDisplayHomeAsUpEnabled(true)
             title = "Register Screen"
         }
+
+        fieldToViewMap = mapOf(
+            TextInputViews.username to binding?.userRegUserName,
+            TextInputViews.password to binding?.userRegPassword,
+            TextInputViews.email to binding?.userRegEmail,
+            TextInputViews.first_name to binding?.userRegFirstname,
+            TextInputViews.last_name to binding?.userRegSecondname
+        )
         backButtonHandler()
         initUi()
         initResponse()
@@ -83,11 +95,8 @@ class RegisterFragment : Fragment() {
                 is ApiState.Error<*> -> {
                     if (networkResponse.error != null) {
                         networkResponse.error.let {
-                            Toast.makeText(
-                                context,
-                                it.toString(),
-                                Toast.LENGTH_LONG
-                            ).show()
+                            val errorBody = networkResponse.error as ErrorBody
+                            showCorrespondingErrorMessages(errorBody)
                         }
                     }
                 }
@@ -98,6 +107,29 @@ class RegisterFragment : Fragment() {
     }
 
 
+    private fun showCorrespondingErrorMessages(errorBody: ErrorBody) {
+        val errorFields = TextInputViews.values()
+
+
+        for (field in errorFields) {
+            val errors = when (field) {
+                TextInputViews.username -> errorBody.username
+                TextInputViews.password -> errorBody.password
+                TextInputViews.email -> errorBody.email
+                TextInputViews.password2 -> errorBody.password2
+                TextInputViews.first_name -> errorBody.first_name
+                TextInputViews.last_name -> errorBody.last_name
+            }
+
+            val view = fieldToViewMap[field]
+
+            if (view is TextInputLayout) {
+                view.error = errors?.joinToString("\n")
+            }
+        }
+    }
+
+    lateinit var emptyList : MutableList<TextInputLayout>
     private fun validateFields(): Boolean {
         binding?.apply {
             return userRegFirstname.isNotEmpty() &&
@@ -124,6 +156,20 @@ class RegisterFragment : Fragment() {
                         last_name = userRegSecondname.getString()
                     )
                     viewModel.userRegister(userData = user)
+                } else {
+                    showErrorMessage()
+                }
+            }
+        }
+    }
+
+    private fun showErrorMessage() {
+        for (textField in TextInputViews.values()){
+            val view = fieldToViewMap[textField]
+            view?.let {
+                if (!view.isNotEmpty()){
+                    view.requestFocus()
+                    view.error = "Field can't be empty"
                 }
             }
         }

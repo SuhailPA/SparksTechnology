@@ -18,6 +18,7 @@ import com.example.sparktech.ui.MainActivity
 import com.example.sparktech.utils.ApiState
 import com.example.sparktech.utils.getString
 import com.example.sparktech.utils.isNotEmpty
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -61,7 +62,13 @@ class LoginFragment : Fragment() {
                 }
 
                 is ApiState.Error<*> -> {
-                    Toast.makeText(context, loginResponse.toString(), Toast.LENGTH_LONG).show()
+                    binding?.root?.let {
+                        Snackbar.make(
+                            it,
+                            loginResponse.error.toString(),
+                            Snackbar.LENGTH_LONG
+                        ).show()
+                    }
                 }
 
                 else -> {}
@@ -79,12 +86,17 @@ class LoginFragment : Fragment() {
                         password = userPassword.getString()
                     )
                     viewModel.userSignIn(userLogin = userLogin)
+                } else {
+                    when {
+                        !userName.isNotEmpty() -> userName.error = "Name can't be empty"
+                        !userPassword.isNotEmpty() -> userPassword.error = "Password can't be empty"
+                    }
                 }
             }
         }
     }
 
-    fun isValidate(): Boolean {
+    private fun isValidate(): Boolean {
         binding?.apply {
             return userName.isNotEmpty() &&
                     userPassword.isNotEmpty()

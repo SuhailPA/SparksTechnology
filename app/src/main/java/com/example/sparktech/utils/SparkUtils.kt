@@ -10,3 +10,11 @@ fun TextInputLayout.getString(): String {
 fun TextInputLayout.isNotEmpty(): Boolean {
     return this.editText?.text?.isNotEmpty() ?: false
 }
+
+fun TextInputLayout.setError() {
+    this.requestFocus()
+    this.error = "Field can't be empty"
+}
+enum class TextInputViews {
+    username, password, password2, first_name, last_name, email
+}
