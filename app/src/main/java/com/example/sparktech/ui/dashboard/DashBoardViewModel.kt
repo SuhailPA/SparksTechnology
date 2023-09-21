@@ -1,5 +1,6 @@
 package com.example.sparktech.ui.dashboard
 
+import android.content.SharedPreferences
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.sparktech.data.model.DashboardData
@@ -14,7 +15,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DashBoardViewModel @Inject constructor(
-    private val repository: DashboardRepository
+    private val repository: DashboardRepository,
+    private val encryptedPref: SharedPreferences
 ) : ViewModel() {
 
     private val _dashBoardList = MutableStateFlow<List<DashboardData>?>(null)
@@ -39,5 +41,9 @@ class DashBoardViewModel @Inject constructor(
 
             }
         }
+    }
+
+    fun clearSharedPref() {
+        encryptedPref.edit().clear().apply()
     }
 }
