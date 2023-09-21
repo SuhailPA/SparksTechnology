@@ -71,4 +71,7 @@ dependencies {
 
     //Encrypted Shared Pref
     implementation ("androidx.security:security-crypto:1.1.0-alpha06")
+
+    //Coil - Image Loader
+    implementation("io.coil-kt:coil:2.4.0")
 }

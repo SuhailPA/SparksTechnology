@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.sparktech.R
 import com.example.sparktech.databinding.FragmentDashBoardBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -33,9 +34,14 @@ class DashBoardFragment : Fragment() {
     }
 
     private fun initUi() {
+        val dashBoardAdapter = DashBoardListAdapter()
+        binding.dashboardRecyclerView.apply {
+            adapter = dashBoardAdapter
+            layoutManager = LinearLayoutManager(context)
+        }
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.dashBoardList.collect {
-                binding.DashboardResult.text = it.toString()
+                dashBoardAdapter.differ.submitList(it)
             }
         }
 

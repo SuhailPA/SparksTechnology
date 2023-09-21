@@ -9,7 +9,7 @@ interface DashboardRepositoryImpl {
     suspend fun getAllData(): Response<List<DashboardData>>
 }
 
-class DashboardRepository @Inject constructor(val sparkAPI: SparkAPI) : DashboardRepositoryImpl {
+class DashboardRepository @Inject constructor(private val sparkAPI: SparkAPI) : DashboardRepositoryImpl {
     override suspend fun getAllData(): Response<List<DashboardData>> = sparkAPI.getAllData()
 
 }
