@@ -16,7 +16,9 @@ import androidx.navigation.fragment.findNavController
 import com.example.sparktech.data.model.NetworkResponse
 import com.example.sparktech.data.model.UserData
 import com.example.sparktech.databinding.FragmentRegisterBinding
-import com.google.android.material.textfield.TextInputLayout
+import com.example.sparktech.ui.MainActivity
+import com.example.sparktech.utils.getString
+import com.example.sparktech.utils.isNotEmpty
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -49,11 +51,11 @@ class RegisterFragment : Fragment() {
     }
 
     private fun backButtonHandler() {
-        (activity as MainActivity).addMenuProvider(object :MenuProvider{
+        (activity as MainActivity).addMenuProvider(object : MenuProvider {
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {}
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-                when (menuItem.itemId){
+                when (menuItem.itemId) {
                     android.R.id.home -> navController.navigateUp()
                 }
                 return true
@@ -68,9 +70,10 @@ class RegisterFragment : Fragment() {
                 is NetworkResponse.Success -> {
                     Toast.makeText(
                         context,
-                        networkResponse.userRegResponse.username.toString(),
+                        "Successfully Registered",
                         Toast.LENGTH_LONG
                     ).show()
+                    navController.navigateUp()
                 }
 
                 is NetworkResponse.Error -> {
@@ -127,14 +130,6 @@ class RegisterFragment : Fragment() {
                 }
             }
         }
-    }
-
-    fun TextInputLayout.getString(): String {
-        return this.editText?.text.toString()
-    }
-
-    fun TextInputLayout.isNotEmpty(): Boolean {
-        return this.editText?.text?.isNotEmpty() ?: false
     }
 
     override fun onDestroyView() {

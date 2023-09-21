@@ -1,4 +1,4 @@
-package com.example.sparktech.ui.login_register
+package com.example.sparktech.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle

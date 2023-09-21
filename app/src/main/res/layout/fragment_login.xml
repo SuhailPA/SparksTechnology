@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="15dp"
-        app:layout_constraintBottom_toTopOf="@id/second_name"
+        app:layout_constraintBottom_toTopOf="@id/user_password"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/half_guideline">
@@ -24,7 +24,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/second_name"
+        android:id="@+id/user_password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="15dp"
@@ -48,7 +48,7 @@
         app:cornerRadius="15dp"
         android:layout_marginTop="15dp"
         android:text="Login"
-        app:layout_constraintTop_toBottomOf="@+id/second_name" />
+        app:layout_constraintTop_toBottomOf="@+id/user_password" />
 
     <TextView
         android:id="@+id/registerText"
