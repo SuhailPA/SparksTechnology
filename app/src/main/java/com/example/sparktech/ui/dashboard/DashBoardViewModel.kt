@@ -31,7 +31,7 @@ class DashBoardViewModel @Inject constructor(
                 if (response.isSuccessful) {
                     _dashBoardList.value = response.body()
                 } else {
-
+                    response.errorBody()?.string()
                 }
             } catch (e: IOException) {
 

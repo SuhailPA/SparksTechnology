@@ -22,6 +22,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
@@ -41,7 +42,7 @@ object SparkModule {
 
     @Singleton
     @Provides
-    fun retrofit(okHttpClient: OkHttpClient): Retrofit = Retrofit.Builder()
+    fun providesRetrofitWithToken(okHttpClient: OkHttpClient): Retrofit = Retrofit.Builder()
         .baseUrl(providesBaseURL())
         .addConverterFactory(GsonConverterFactory.create())
         .client(okHttpClient)
@@ -81,9 +82,7 @@ object SparkModule {
         interceptor.level = HttpLoggingInterceptor.Level.BODY
         val token = encryptedPref.getString("accessToken", "").orEmpty()
         return OkHttpClient.Builder().addInterceptor(
-            OAuthInterceptor(
-                "Bearer", token
-            )
+            OAuthInterceptor(encryptedPref)
         ).addInterceptor(interceptor)
             .build()
     }
