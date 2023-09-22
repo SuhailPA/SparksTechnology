@@ -119,28 +119,31 @@ class RegisterFragment : Fragment() {
     }
 
     private fun initResponse() {
-        viewModel.userData.observe(viewLifecycleOwner) { networkResponse ->
-            when (networkResponse) {
-                is ApiState.Success<*> -> {
-                    Toast.makeText(
-                        context,
-                        getString(R.string.successfully_registered),
-                        Toast.LENGTH_LONG
-                    ).show()
-                    navController.navigateUp()
-                }
+        viewModel.registerData.observe(viewLifecycleOwner) { it ->
+            it.getContentIfNotHandled()?.let { networkResponse->
+                when (networkResponse) {
+                    is ApiState.Success<*> -> {
+                        Toast.makeText(
+                            context,
+                            getString(R.string.successfully_registered),
+                            Toast.LENGTH_LONG
+                        ).show()
+                        navController.navigateUp()
+                    }
 
-                is ApiState.Error<*> -> {
-                    if (networkResponse.error != null) {
-                        networkResponse.error.let {
-                            val errorBody = networkResponse.error as ErrorBody
-                            showCorrespondingErrorMessages(errorBody)
+                    is ApiState.Error<*> -> {
+                        if (networkResponse.error != null) {
+                            networkResponse.error.let {
+                                val errorBody = networkResponse.error as ErrorBody
+                                showCorrespondingErrorMessages(errorBody)
+                            }
                         }
                     }
-                }
 
-                else -> {}
+                    else -> {}
+                }
             }
+
         }
     }
 

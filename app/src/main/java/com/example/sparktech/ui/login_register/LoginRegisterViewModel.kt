@@ -12,6 +12,7 @@ import com.example.sparktech.data.model.UserData
 import com.example.sparktech.data.model.UserLogin
 import com.example.sparktech.repository.LoginRegisterRepositoryImpl
 import com.example.sparktech.utils.ApiState
+import com.example.sparktech.utils.Event
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -31,29 +32,32 @@ class LoginRegisterViewModel @Inject constructor(
 //    private var _userDataFlow = MutableStateFlow<NetworkResponse?>(null)
 //    val userDataFlow: StateFlow<NetworkResponse?> = _userDataFlow
 
-    private var _userData = MutableLiveData<ApiState?>(null)
-    val userData: LiveData<ApiState?> = _userData
+    private val _registerData = MutableLiveData<Event<ApiState>>()
+    val registerData: LiveData<Event<ApiState>>
+        get() = _registerData
 
-    private var _userLogin = MutableLiveData<ApiState?>(null)
-    val userLogin: LiveData<ApiState?> = _userLogin
+    private val _loginData = MutableLiveData<Event<ApiState>>()
+    val loginData: LiveData<Event<ApiState>>
+        get() = _loginData
+
     fun userRegister(userData: UserData) {
         viewModelScope.launch {
             try {
                 val response = repository.userRegistration(user = userData)
-                _userData.value = if (response.isSuccessful) {
-                    ApiState.Success(response.body()!!)
+                _registerData.value = if (response.isSuccessful) {
+                    Event(ApiState.Success(response.body()!!))
                 } else {
                     val gson = Gson()
                     val errorResponse =
                         gson.fromJson(response.errorBody()?.string(), ErrorBody::class.java)
-                    ApiState.Error(errorResponse)
+                    Event(ApiState.Error(errorResponse))
                 }
             } catch (e: IOException) {
-                _userData.value = ApiState.Error(e.message.toString())
+                _registerData.value = Event(ApiState.Error(e.message.toString()))
             } catch (e: HttpException) {
-                _userData.value = ApiState.Error(e.message.toString())
+                _registerData.value = Event(ApiState.Error(e.message.toString()))
             } catch (e: Exception) {
-                _userData.value = ApiState.Error(e.message.toString())
+                _registerData.value = Event(ApiState.Error(e.message.toString()))
             }
         }
     }
@@ -63,20 +67,20 @@ class LoginRegisterViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 val response = repository.userLogin(userLogin = userLogin)
-                _userLogin.value = if (response.isSuccessful) {
+                _loginData.value = if (response.isSuccessful) {
                     storeInEncryptedPref("accessToken", response.body()?.access.orEmpty())
                     storeInEncryptedPref("refreshToken", response.body()?.access.orEmpty())
-                    ApiState.Success(response.body()!!)
+                    Event(ApiState.Success(response.body()!!))
                 } else {
                     val gson = Gson()
                     val errorResponse =
                         gson.fromJson(response.errorBody()?.string(), LoginError::class.java)
-                    ApiState.Error(errorResponse.detail)
+                    Event(ApiState.Error(errorResponse.detail))
                 }
             } catch (e: IOException) {
-                _userLogin.value = ApiState.Error(e.message)
+                _loginData.value = Event(ApiState.Error(e.message))
             } catch (e: HttpException) {
-                _userLogin.value = ApiState.Error(e.message)
+                _loginData.value = Event(ApiState.Error(e.message))
             }
         }
     }

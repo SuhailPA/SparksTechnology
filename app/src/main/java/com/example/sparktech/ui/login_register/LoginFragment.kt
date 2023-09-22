@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
@@ -47,6 +48,7 @@ class LoginFragment : Fragment() {
         }
 
         initUi()
+        textInputValidation()
         initLoginObserver()
         binding?.registerText?.setOnClickListener {
             findNavController().navigate(directions = LoginFragmentDirections.actionLoginFragmentToRegisterFragment())
@@ -54,24 +56,41 @@ class LoginFragment : Fragment() {
         return binding?.root
     }
 
+    private fun textInputValidation() {
+        binding?.apply {
+            loginUserEditText.doOnTextChanged { text, _, _, _ ->
+                userName.error =
+                    if (text?.length!! == 0) getString(R.string.field_can_t_be_empty)
+                    else null
+            }
+            loginUserPasswordEditText.doOnTextChanged { text, _, _, _ ->
+                userPassword.error =
+                    if (text?.length!! == 0) getString(R.string.field_can_t_be_empty)
+                    else null
+            }
+        }
+    }
+
     private fun initLoginObserver() {
-        viewModel.userLogin.observe(viewLifecycleOwner) { loginResponse ->
-            when (loginResponse) {
-                is ApiState.Success<*> -> {
-                    navController.navigate(directions = LoginFragmentDirections.actionLoginFragmentToDashBoardFragment())
-                }
-
-                is ApiState.Error<*> -> {
-                    binding?.root?.let {
-                        Snackbar.make(
-                            it,
-                            loginResponse.error.toString(),
-                            Snackbar.LENGTH_LONG
-                        ).show()
+        viewModel.loginData.observe(viewLifecycleOwner) { it ->
+            it.getContentIfNotHandled()?.let { loginResponse ->
+                when (loginResponse) {
+                    is ApiState.Success<*> -> {
+                        navController.navigate(directions = LoginFragmentDirections.actionLoginFragmentToDashBoardFragment())
                     }
-                }
 
-                else -> {}
+                    is ApiState.Error<*> -> {
+                        binding?.root?.let {
+                            Snackbar.make(
+                                it,
+                                loginResponse.error.toString(),
+                                Snackbar.LENGTH_LONG
+                            ).show()
+                        }
+                    }
+
+                    else -> {}
+                }
             }
         }
     }
@@ -88,8 +107,11 @@ class LoginFragment : Fragment() {
                     viewModel.userSignIn(userLogin = userLogin)
                 } else {
                     when {
-                        !userName.isNotEmpty() -> userName.error = getString(R.string.field_can_t_be_empty)
-                        !userPassword.isNotEmpty() -> userPassword.error = getString(R.string.field_can_t_be_empty)
+                        !userName.isNotEmpty() -> userName.error =
+                            getString(R.string.field_can_t_be_empty)
+
+                        !userPassword.isNotEmpty() -> userPassword.error =
+                            getString(R.string.field_can_t_be_empty)
                     }
                 }
             }
