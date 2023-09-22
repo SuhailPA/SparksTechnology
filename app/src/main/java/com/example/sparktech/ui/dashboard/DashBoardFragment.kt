@@ -14,7 +14,9 @@ import android.widget.Toast
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -99,18 +101,20 @@ class DashBoardFragment : Fragment() {
             adapter = dashBoardAdapter
             layoutManager = LinearLayoutManager(context)
         }
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.dashBoardList.collect {
-                when (it) {
-                    is ApiState.Success<*> -> {
-                        dashBoardAdapter.differ.submitList(it.data as List<DashboardData>)
-                    }
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.dashBoardList.collect {
+                    when (it) {
+                        is ApiState.Success<*> -> {
+                            dashBoardAdapter.differ.submitList(it.data as List<DashboardData>)
+                        }
 
-                    is ApiState.Error<*> -> {
-                        Toast.makeText(context, it.error.toString(), Toast.LENGTH_LONG).show()
-                    }
+                        is ApiState.Error<*> -> {
+                            Toast.makeText(context, it.error.toString(), Toast.LENGTH_LONG).show()
+                        }
 
-                    else -> {}
+                        else -> {}
+                    }
                 }
             }
         }
