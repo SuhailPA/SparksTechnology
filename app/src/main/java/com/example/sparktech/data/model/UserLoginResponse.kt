@@ -13,10 +13,3 @@ data class UserLogin(
     val username: String,
     val password: String
 )
-
-sealed interface LoginResponse {
-    data class Success(val userLoginResponse: UserLoginResponse) : LoginResponse
-    data class Error(val errorRegResponse: ErrorBody? = null, val errorMessage: String? = null) :
-        LoginResponse
-
-}

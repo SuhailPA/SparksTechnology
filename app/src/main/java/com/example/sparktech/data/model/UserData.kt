@@ -18,8 +18,3 @@ data class ErrorBody(
     val last_name: List<String?>?
 )
 
-sealed interface NetworkResponse {
-    data class Success(val userRegResponse: UserRegResponse) : NetworkResponse
-    data class Error(val errorRegResponse: ErrorBody? = null, val errorMessage: String? = null) : NetworkResponse
-
-}

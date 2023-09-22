@@ -17,8 +17,8 @@ import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
+import com.example.sparktech.R
 import com.example.sparktech.data.model.ErrorBody
-import com.example.sparktech.data.model.NetworkResponse
 import com.example.sparktech.data.model.UserData
 import com.example.sparktech.databinding.FragmentRegisterBinding
 import com.example.sparktech.ui.MainActivity
@@ -71,28 +71,34 @@ class RegisterFragment : Fragment() {
     private fun textInputValidation() {
         binding?.apply {
             userRegUsernameEditText.doOnTextChanged { text, _, _, _ ->
-                userRegUserName.error = if (text?.length!! == 0) "Field can't be empty"
-                else null
+                userRegUserName.error =
+                    if (text?.length!! == 0) getString(R.string.field_can_t_be_empty)
+                    else null
             }
             userRegFirstNameEditText.doOnTextChanged { text, _, _, _ ->
-                userRegFirstname.error = if (text?.length!! == 0) "Field can't be empty"
-                else null
+                userRegFirstname.error =
+                    if (text?.length!! == 0) getString(R.string.field_can_t_be_empty)
+                    else null
             }
             userRegSecondNameEditText.doOnTextChanged { text, _, _, _ ->
-                userRegSecondname.error = if (text?.length!! == 0) "Field can't be empty"
-                else null
+                userRegSecondname.error =
+                    if (text?.length!! == 0) getString(R.string.field_can_t_be_empty)
+                    else null
             }
             userRegEmailEditText.doOnTextChanged { text, _, _, _ ->
-                userRegEmail.error = if (text?.length!! == 0) "Field can't be empty"
-                else null
+                userRegEmail.error =
+                    if (text?.length!! == 0) getString(R.string.field_can_t_be_empty)
+                    else null
             }
             userRegPasswordEditText.doOnTextChanged { text, _, _, _ ->
-                userRegPassword.error = if (text?.length!! == 0) "Field can't be empty"
-                else null
+                userRegPassword.error =
+                    if (text?.length!! == 0) getString(R.string.field_can_t_be_empty)
+                    else null
             }
             userRegPassword2EditText.doOnTextChanged { text, _, _, _ ->
-                userRegPassword.error = if (text?.length!! == 0) "Field can't be empty"
-                else null
+                userRegPassword.error =
+                    if (text?.length!! == 0) getString(R.string.field_can_t_be_empty)
+                    else null
             }
         }
 
@@ -118,7 +124,7 @@ class RegisterFragment : Fragment() {
                 is ApiState.Success<*> -> {
                     Toast.makeText(
                         context,
-                        "Successfully Registered",
+                        getString(R.string.successfully_registered),
                         Toast.LENGTH_LONG
                     ).show()
                     navController.navigateUp()
@@ -200,7 +206,7 @@ class RegisterFragment : Fragment() {
             view?.let {
                 if (!view.isNotEmpty()) {
                     view.requestFocus()
-                    view.error = "Field can't be empty"
+                    view.error = getString(R.string.field_can_t_be_empty)
                 }
             }
         }

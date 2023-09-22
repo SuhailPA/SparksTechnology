@@ -29,7 +29,8 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class DashBoardFragment : Fragment() {
 
-    lateinit var binding: FragmentDashBoardBinding
+    private var _binding: FragmentDashBoardBinding? = null
+    private val binding get() = _binding
     private val viewModel: DashBoardViewModel by viewModels()
     lateinit var navController: NavController
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,7 +43,7 @@ class DashBoardFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        binding = FragmentDashBoardBinding.inflate(inflater, container, false)
+        _binding = FragmentDashBoardBinding.inflate(inflater, container, false)
         navController = findNavController()
         (activity as MainActivity).supportActionBar?.apply {
             title = "Dashboard Screen"
@@ -50,7 +51,7 @@ class DashBoardFragment : Fragment() {
         }
         initUi()
         initSignOut()
-        return binding.root
+        return binding?.root
     }
 
     private fun initSignOut() {
@@ -63,7 +64,6 @@ class DashBoardFragment : Fragment() {
                 when (menuItem.itemId) {
                     R.id.logout -> {
                         alertPopUp()
-
                         return true
                     }
                 }
@@ -76,7 +76,7 @@ class DashBoardFragment : Fragment() {
     private fun alertPopUp() {
         AlertDialog.Builder(context)
             .setTitle("Exit")
-            .setMessage("Are you sure to exit")
+            .setMessage(getString(R.string.are_you_sure_to_exit))
             .setPositiveButton("Yes") { dialog, _ ->
                 dialog.dismiss()
                 viewModel.clearSharedPref()
@@ -88,9 +88,14 @@ class DashBoardFragment : Fragment() {
             .show()
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
     private fun initUi() {
         val dashBoardAdapter = DashBoardListAdapter()
-        binding.dashboardRecyclerView.apply {
+        binding?.dashboardRecyclerView?.apply {
             adapter = dashBoardAdapter
             layoutManager = LinearLayoutManager(context)
         }
@@ -110,5 +115,4 @@ class DashBoardFragment : Fragment() {
             }
         }
     }
-
 }

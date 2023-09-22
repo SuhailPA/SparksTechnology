@@ -11,7 +11,7 @@ import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
-import com.example.sparktech.data.model.LoginResponse
+import com.example.sparktech.R
 import com.example.sparktech.data.model.UserLogin
 import com.example.sparktech.databinding.FragmentLoginBinding
 import com.example.sparktech.ui.MainActivity
@@ -88,8 +88,8 @@ class LoginFragment : Fragment() {
                     viewModel.userSignIn(userLogin = userLogin)
                 } else {
                     when {
-                        !userName.isNotEmpty() -> userName.error = "Name can't be empty"
-                        !userPassword.isNotEmpty() -> userPassword.error = "Password can't be empty"
+                        !userName.isNotEmpty() -> userName.error = getString(R.string.field_can_t_be_empty)
+                        !userPassword.isNotEmpty() -> userPassword.error = getString(R.string.field_can_t_be_empty)
                     }
                 }
             }
