@@ -110,12 +110,15 @@ class RegisterFragment : Fragment() {
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                 when (menuItem.itemId) {
-                    android.R.id.home -> navController.navigateUp()
+                    android.R.id.home -> {
+                        navController.navigateUp()
+                        return true
+                    }
                 }
-                return true
+                return false
             }
 
-        })
+        },viewLifecycleOwner)
     }
 
     private fun initResponse() {
