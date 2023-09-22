@@ -21,6 +21,7 @@
             android:layout_margin="15dp">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/userRegUsernameEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="User Name"
@@ -35,6 +36,7 @@
             android:layout_margin="15dp">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/userRegFirstNameEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="First Name"
@@ -49,6 +51,7 @@
             android:layout_margin="15dp">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/userRegSecondNameEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Second Name"
@@ -63,6 +66,7 @@
             android:layout_margin="15dp">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/userRegEmailEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Email"
@@ -78,6 +82,7 @@
             app:passwordToggleEnabled="true">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/userRegPasswordEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Password"
@@ -93,6 +98,7 @@
             app:passwordToggleEnabled="true">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/userRegPassword2EditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Confirm Password"

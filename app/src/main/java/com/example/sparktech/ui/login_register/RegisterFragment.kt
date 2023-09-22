@@ -13,6 +13,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.view.MenuProvider
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
@@ -63,7 +64,38 @@ class RegisterFragment : Fragment() {
         backButtonHandler()
         initUi()
         initResponse()
+        textInputValidation()
         return binding?.root
+    }
+
+    private fun textInputValidation() {
+        binding?.apply {
+            userRegUsernameEditText.doOnTextChanged { text, _, _, _ ->
+                userRegUserName.error = if (text?.length!! == 0) "Field can't be empty"
+                else null
+            }
+            userRegFirstNameEditText.doOnTextChanged { text, _, _, _ ->
+                userRegFirstname.error = if (text?.length!! == 0) "Field can't be empty"
+                else null
+            }
+            userRegSecondNameEditText.doOnTextChanged { text, _, _, _ ->
+                userRegSecondname.error = if (text?.length!! == 0) "Field can't be empty"
+                else null
+            }
+            userRegEmailEditText.doOnTextChanged { text, _, _, _ ->
+                userRegEmail.error = if (text?.length!! == 0) "Field can't be empty"
+                else null
+            }
+            userRegPasswordEditText.doOnTextChanged { text, _, _, _ ->
+                userRegPassword.error = if (text?.length!! == 0) "Field can't be empty"
+                else null
+            }
+            userRegPassword2EditText.doOnTextChanged { text, _, _, _ ->
+                userRegPassword.error = if (text?.length!! == 0) "Field can't be empty"
+                else null
+            }
+        }
+
     }
 
     private fun backButtonHandler() {
@@ -129,7 +161,6 @@ class RegisterFragment : Fragment() {
         }
     }
 
-    lateinit var emptyList : MutableList<TextInputLayout>
     private fun validateFields(): Boolean {
         binding?.apply {
             return userRegFirstname.isNotEmpty() &&
@@ -164,10 +195,10 @@ class RegisterFragment : Fragment() {
     }
 
     private fun showErrorMessage() {
-        for (textField in TextInputViews.values()){
+        for (textField in TextInputViews.values()) {
             val view = fieldToViewMap[textField]
             view?.let {
-                if (!view.isNotEmpty()){
+                if (!view.isNotEmpty()) {
                     view.requestFocus()
                     view.error = "Field can't be empty"
                 }
