@@ -48,7 +48,6 @@ class LoginFragment : Fragment() {
         }
 
         initUi()
-        textInputValidation()
         initLoginObserver()
         binding?.registerText?.setOnClickListener {
             findNavController().navigate(directions = LoginFragmentDirections.actionLoginFragmentToRegisterFragment())
@@ -98,6 +97,7 @@ class LoginFragment : Fragment() {
     private fun initUi() {
         binding?.apply {
             loginButton.setOnClickListener {
+                textInputValidation()
                 hideKeyboard()
                 if (isValidate()) {
                     val userLogin = UserLogin(
