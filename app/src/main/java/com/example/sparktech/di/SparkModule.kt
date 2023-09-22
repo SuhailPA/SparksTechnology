@@ -6,6 +6,7 @@ import android.content.SharedPreferences
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
 import com.example.sparktech.data.remote.SparkAPI
+import com.example.sparktech.data.remote.SparkDashBoardAPI
 import com.example.sparktech.repository.DashboardRepository
 import com.example.sparktech.repository.DashboardRepositoryImpl
 import com.example.sparktech.repository.LoginRegisterRepository
@@ -48,10 +49,16 @@ object SparkModule {
         .client(okHttpClient)
         .build()
 
+    @Singleton
+    @Provides
+    fun providesRetrofitWithoutToken(): Retrofit.Builder = Retrofit.Builder()
+        .baseUrl(providesBaseURL())
+        .addConverterFactory(GsonConverterFactory.create())
 
     @Singleton
     @Provides
-    fun providesSparkAPI(retrofit: Retrofit): SparkAPI = retrofit.create(SparkAPI::class.java)
+    fun providesSparkAPI(retrofit: Retrofit.Builder): SparkAPI =
+        retrofit.build().create(SparkAPI::class.java)
 
     @Singleton
     @Provides
@@ -80,16 +87,19 @@ object SparkModule {
     fun providesOKHttpClient(encryptedPref: SharedPreferences): OkHttpClient {
         val interceptor = HttpLoggingInterceptor()
         interceptor.level = HttpLoggingInterceptor.Level.BODY
-        val token = encryptedPref.getString("accessToken", "").orEmpty()
         return OkHttpClient.Builder().addInterceptor(
             OAuthInterceptor(encryptedPref)
         ).addInterceptor(interceptor)
             .build()
     }
 
+    @Singleton
+    @Provides
+    fun providesSparkDashBoardAPI(retrofit: Retrofit): SparkDashBoardAPI =
+        retrofit.create(SparkDashBoardAPI::class.java)
 
     @Provides
     @Singleton
-    fun provideDashBoardRepository(sparkAPI: SparkAPI): DashboardRepositoryImpl =
-        DashboardRepository(sparkAPI)
+    fun provideDashBoardRepository(sparkDashBoardAPI: SparkDashBoardAPI): DashboardRepositoryImpl =
+        DashboardRepository(sparkDashBoardAPI)
 }
