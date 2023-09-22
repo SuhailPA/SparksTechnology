@@ -22,8 +22,8 @@ class DashBoardListAdapter : RecyclerView.Adapter<DashBoardListAdapter.DashBoard
                     item.image_link
                 ){
                     crossfade(true)
-                    placeholder(R.drawable.image_placeholder)
-                    error(R.drawable.image_placeholder)
+                    placeholder(R.drawable.placeholder_image)
+                    error(R.drawable.placeholder_image)
                 }
                 itemText.text = item.id.toString()
 
